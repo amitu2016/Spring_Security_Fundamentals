@@ -1,7 +1,5 @@
 package com.amitu.spring.cloud.security;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,26 +15,24 @@ import org.springframework.security.web.context.DelegatingSecurityContextReposit
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 public class WebSecurityConfig {
-	
+
 	@Autowired
 	UserDetailsService userDetailsService;
-	
+
 	@Bean
 	SecurityContextRepository securityContextRepository() {
-		return new DelegatingSecurityContextRepository(new RequestAttributeSecurityContextRepository(), 
+		return new DelegatingSecurityContextRepository(new RequestAttributeSecurityContextRepository(),
 				new HttpSessionSecurityContextRepository());
 	}
-	
+
 	@Bean
 	BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	AuthenticationManager authenticationManager() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -44,38 +40,27 @@ public class WebSecurityConfig {
 		provider.setPasswordEncoder(passwordEncoder());
 		return new ProviderManager(provider);
 	}
-	
+
 	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-		
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
 		http.authorizeHttpRequests()
-		.requestMatchers(HttpMethod.GET, "/coupon/get-coupon/{code:^[A-z]*$}","/showGetCoupon","/getCoupon")
-		.hasAnyRole("USER","ADMIN")
-		//.permitAll()
-		.requestMatchers(HttpMethod.GET, "/showCreateCoupon","/createCoupon","/createResponse")
-		.hasRole("ADMIN")
-		.requestMatchers(HttpMethod.POST, "/coupon/create","/saveCoupon")
-		.hasRole("ADMIN")
-		.requestMatchers(HttpMethod.POST, "/getCoupon")
-		.hasAnyRole("USER","ADMIN")
-		.requestMatchers("/","/login","/showReg","/registerUser").permitAll()
-		.and().logout().logoutSuccessUrl("/");
-		
-		http.cors(corsCustomizer -> {
-			CorsConfigurationSource configurationSource = request->{
-				CorsConfiguration corsConfiguration = new CorsConfiguration();
-				corsConfiguration.setAllowedOrigins(List.of("localhost:9090"));
-				corsConfiguration.setAllowedMethods(List.of("GET"));
-				return corsConfiguration;
-			};
-			corsCustomizer.configurationSource(configurationSource);
-		});
-		
+				.requestMatchers(HttpMethod.GET, "/coupon/get-coupon/{code:^[A-z]*$}", "/index", "/showGetCoupon",
+						 "/couponDetails")
+				.hasAnyRole("USER","ADMIN")
+				.requestMatchers(HttpMethod.GET, "/showCreateCoupon", "/createCoupon", "/createResponse")
+				.hasRole("ADMIN")
+				.requestMatchers(HttpMethod.POST, "/coupon/create", "/saveCoupon","/getCoupon")
+				.hasRole("ADMIN")
+				.requestMatchers("/", "/login",  "/showReg", "/registerUser").permitAll().			
+				and().logout()
+				.logoutSuccessUrl("/").and().csrf().disable();
+
+
 		http.securityContext(context -> context.requireExplicitSave(true));
-		
+
 		return http.build();
-		
+
 	}
 
-	
 }

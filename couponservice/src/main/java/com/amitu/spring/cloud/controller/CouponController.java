@@ -2,8 +2,10 @@ package com.amitu.spring.cloud.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.amitu.spring.cloud.model.Coupon;
@@ -32,11 +34,10 @@ public class CouponController {
 	}
 
 	@PostMapping("/getCoupon")
-	public ModelAndView getCoupon(String code) {
-		ModelAndView mav = new ModelAndView("couponDetails");
-		System.out.println(code);
-		mav.addObject(repo.findByCode(code));
-		return mav;
+	public String getCoupon(String code,Model model) {
+		Coupon coupon = repo.findByCode(code);
+		model.addAttribute("coupon", coupon);
+		return "couponDetails";
 	}
 
 }

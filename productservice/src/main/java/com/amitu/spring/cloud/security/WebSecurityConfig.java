@@ -59,7 +59,7 @@ public class WebSecurityConfig {
 		.requestMatchers(HttpMethod.POST, "/getProduct")
 		.hasAnyRole("USER","ADMIN")
 		.requestMatchers("/","/login","/showReg","/registerUser").permitAll()
-		.and().logout().logoutSuccessUrl("/");
+		.and().logout().logoutSuccessUrl("/").and().csrf().disable();
 		
 		http.cors(corsCustomizer -> {
 			CorsConfigurationSource configurationSource = request->{
