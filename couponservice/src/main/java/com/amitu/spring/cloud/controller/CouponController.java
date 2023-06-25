@@ -1,12 +1,11 @@
 package com.amitu.spring.cloud.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.amitu.spring.cloud.model.Coupon;
 import com.amitu.spring.cloud.repository.CouponRepository;
@@ -18,6 +17,7 @@ public class CouponController {
 	private CouponRepository repo;
 
 	@GetMapping("/showCreateCoupon")
+	@PreAuthorize("hasRole('ADMIN')")
 	public String showCreateCoupon() {
 		return "createCoupon";
 	}
