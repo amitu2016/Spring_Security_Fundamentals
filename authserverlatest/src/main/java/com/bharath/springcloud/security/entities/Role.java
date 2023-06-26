@@ -2,15 +2,17 @@ package com.bharath.springcloud.security.entities;
 
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
 import org.springframework.security.core.GrantedAuthority;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+
 @Entity
+@Table(name="role", schema = "mydb")
 public class Role implements GrantedAuthority {
 
 	private static final long serialVersionUID = 1L;
